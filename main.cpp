@@ -4,9 +4,30 @@
 
 atomic<double> dFrequencyOutput = 0.0;
 
+double w(double dHertz)
+{
+	return dHertz * 2.0 * PI;
+}
+
+double osc(double dHertz, double dTime, int nType)
+{
+	switch (nType)
+	{
+		case 0: // Sine Wave
+			return sin(w(dHertz) * dTime);
+		case 1: // Square Wave
+			return sin(w(dHertz) * dTime) > 0.0 ? 1.0 : -1.0;
+		case 2: // Triangle Wave
+			return asin(sin(w(dHertz) * dTime)) * 2.0 / PI;
+
+		default:
+			return 0;
+	}
+}
+
 double MakeNoise(double dTime)
 {
-	double dOutput = 1.0 * (sin(dFrequencyOutput * 2.0 * 3.14159 * dTime) + sin((dFrequencyOutput + 20.0) * 2.0 * 3.14159 * dTime));
+	double dOutput = osc(dFrequencyOutput, dTime, 2); // change the osc here 
 	return dOutput * 0.5;
 }
 
@@ -18,6 +39,16 @@ int main()
 	vector<std::wstring> devices = NoiseMaker<short>::Enumerate();
 
 	for (auto d : devices) std::wcout << "Found Output Device: " << d << endl;
+
+	// Display a keyboard
+	wcout << endl <<
+		"|   |   |   |   |   | |   |   |   |   | |   | |   |   |   |" << endl <<
+		"|   | S |   |   | F | | G |   |   | J | | K | | L |   |   |" << endl <<
+		"|   |___|   |   |___| |___|   |   |___| |___| |___|   |   |__" << endl <<
+		"|     |     |     |     |     |     |     |     |     |     |" << endl <<
+		"|  W  |  X  |  C  |  V  |  B  |  N  |  ,  |  ;  |  :  |  !  |" << endl <<
+		"|_____|_____|_____|_____|_____|_____|_____|_____|_____|_____|" << endl << endl;
+
 
 	// Create Sound Machine
 	NoiseMaker<short> sound(devices[0], 44100, 1, 8, 512);
