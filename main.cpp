@@ -19,7 +19,19 @@ double osc(double dHertz, double dTime, int nType)
 			return sin(w(dHertz) * dTime) > 0.0 ? 1.0 : -1.0;
 		case 2: // Triangle Wave
 			return asin(sin(w(dHertz) * dTime)) * 2.0 / PI;
+		case 3: // Saw Wave (analog / warn / slow)
+		{
+			double dOutput = 0.0;
 
+			for (double n = 1.0; n < 10.0; n++)
+				dOutput += (sin(n * w(dHertz) * dTime)) / n;
+			return dOutput * (2.0 / PI);
+		}
+		case 4: // Saw Wave (optimized / harsh / fast)
+			return (2.0 / PI) * (dHertz * PI * fmod(dTime, 1.0 / dHertz) - (PI / 2.0));
+
+		case 5: // Pseudo random Noise
+			return 2.0 * ((double)rand() / (double)RAND_MAX) - 1.0;
 		default:
 			return 0;
 	}
@@ -27,8 +39,8 @@ double osc(double dHertz, double dTime, int nType)
 
 double MakeNoise(double dTime)
 {
-	double dOutput = osc(dFrequencyOutput, dTime, 2); // change the osc here 
-	return dOutput * 0.5;
+	double dOutput = osc(dFrequencyOutput, dTime, 3); // change the osc here 
+	return dOutput * 0.4;
 }
 
 int main()
