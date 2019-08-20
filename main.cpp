@@ -487,7 +487,7 @@ int main()
 
 
 	// Shameless self-promotion
-	wcout << "www.OneLoneCoder.com - Synthesizer Part 4" << endl
+	wcout
 		<< "Multiple FM Oscillators, Sequencing, Polyphony" << endl << endl;
 
 	// Get all sound hardware
